@@ -44,3 +44,42 @@ resource "google_compute_subnetwork" "data-subnet-2" {
   region        = "us-central1"
   network       = google_compute_network.vpc_network.self_link
 }
+
+resource "google_compute_firewall" "web_firewall" {
+  name    = "web-firewall"
+  network = google_compute_network.vpc_network.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+
+  source_tags = ["web"]
+  target_tags = ["app"]
+}
+
+resource "google_compute_firewall" "app_firewall" {
+  name    = "app-firewall"
+  network = google_compute_network.vpc_network.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = ["8080"]
+  }
+
+  source_tags = ["app"]
+  target_tags = ["db"]
+}
+
+resource "google_compute_firewall" "db_firewall" {
+  name    = "db-firewall"
+  network = google_compute_network.vpc_network.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = ["3306"]
+  }
+
+  source_tags = ["app"]
+  target_tags = ["db"]
+}
