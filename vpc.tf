@@ -87,3 +87,9 @@ resource "google_compute_firewall" "db_firewall" {
   source_tags = ["app"]
   target_tags = ["db"]
 }
+
+resource "google_service_networking_connection" "private_service_connection" {
+  network                 = google_compute_network.vpc_network.self_link
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = ["10.0.10.0/24", "10.0.11.0/24", "10.0.20.0/24", "10.0.21/24"]
+}
