@@ -34,21 +34,6 @@ resource "google_compute_subnetwork" "app-subnet-2" {
   private_ip_google_access = true
 }
 
-resource "google_compute_subnetwork" "data-subnet-1" {
-  name          = "data-subnet-1"
-  ip_cidr_range = "10.0.20.0/24"
-  region        = "us-central1"
-  network       = google_compute_network.vpc_network.self_link
-  private_ip_google_access = true
-}
-
-resource "google_compute_subnetwork" "data-subnet-2" {
-  name          = "data-subnet-2"
-  ip_cidr_range = "10.0.21.0/24"
-  region        = "us-central1"
-  network       = google_compute_network.vpc_network.self_link
-  private_ip_google_access = true
-}
 
 resource "google_compute_firewall" "web_firewall" {
   name    = "web-firewall"
@@ -73,21 +58,8 @@ resource "google_compute_firewall" "app_firewall" {
   }
 
   source_ranges = [ "0.0.0.0/0" ]
-  source_tags = ["app"]
+  target_tags = ["app"]
 }
-
-# resource "google_compute_firewall" "db_firewall" {
-#   name    = "db-firewall"
-#   network = google_compute_network.vpc_network.self_link
-
-#   allow {
-#     protocol = "tcp"
-#     ports    = ["3306"]
-#   }
-
-#   source_ranges = [ "0.0.0.0/0" ]
-# #   target_tags = ["db"]
-# }
 
 
 resource "google_compute_global_address" "private_ip_address" {
