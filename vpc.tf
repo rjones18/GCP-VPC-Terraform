@@ -46,8 +46,7 @@ resource "google_compute_firewall" "web_firewall" {
     ports    = ["80"]
   }
 
-  source_tags = ["web"]
-  target_tags = ["app"]
+source_ranges = ["0.0.0.0/0"]
 }
 
 resource "google_compute_firewall" "app_firewall" {
