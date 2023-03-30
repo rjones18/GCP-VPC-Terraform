@@ -9,6 +9,7 @@ resource "google_compute_subnetwork" "web-subnet-1" {
   ip_cidr_range = "10.0.1.0/24"
   region        = "us-central1"
   network       = google_compute_network.vpc_network.self_link
+  private_ip_google_access = false
 }
 
 resource "google_compute_subnetwork" "web-subnet-2" {
@@ -16,6 +17,7 @@ resource "google_compute_subnetwork" "web-subnet-2" {
   ip_cidr_range = "10.0.2.0/24"
   region        = "us-central1"
   network       = google_compute_network.vpc_network.self_link
+  private_ip_google_access = false
 }
 
 resource "google_compute_subnetwork" "app-subnet-1" {
