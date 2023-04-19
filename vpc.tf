@@ -12,13 +12,6 @@ resource "google_compute_subnetwork" "web-subnet-1" {
   private_ip_google_access = false
 }
 
-resource "google_compute_subnetwork" "web-subnet-2" {
-  name          = "web-subnet-2"
-  ip_cidr_range = "10.0.2.0/24"
-  region        = "us-central1"
-  network       = google_compute_network.vpc_network.self_link
-  private_ip_google_access = false
-}
 
 resource "google_compute_subnetwork" "app-subnet-1" {
   name          = "app-subnet-1"
@@ -27,15 +20,6 @@ resource "google_compute_subnetwork" "app-subnet-1" {
   network       = google_compute_network.vpc_network.self_link
   private_ip_google_access = true
 }
-
-resource "google_compute_subnetwork" "app-subnet-2" {
-  name          = "app-subnet-2"
-  ip_cidr_range = "10.0.11.0/24"
-  region        = "us-central1"
-  network       = google_compute_network.vpc_network.self_link
-  private_ip_google_access = true
-}
-
 
 resource "google_compute_firewall" "web_firewall" {
   name    = "web-firewall"
@@ -75,4 +59,25 @@ resource "google_service_networking_connection" "private_service_connection" {
   network                 = google_compute_network.vpc_network.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_address.name]
+}
+
+resource "google_compute_router" "router" {
+  name    = "nat-router"
+  network = "project-vpc"
+  region  = "us-central1"
+}
+
+resource "google_compute_router_nat" "nat" {
+  name   = "nat-gateway"
+  router = google_compute_router.router.name
+  region = google_compute_router.router.region
+
+  nat_ip_allocate_option = "AUTO_ONLY"
+
+  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+
+  log_config {
+    enable = true
+    filter = "ERRORS_ONLY"
+  }
 }
