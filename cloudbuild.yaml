@@ -23,11 +23,13 @@ steps:
       echo "$BRANCH_NAME"
       echo "***********************"
 
-- id: 'pull snyk image'
+- id: 'install snyk'
   name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'sh'
   args:
-  - 'pull'
-  - 'snyk/snyk:docker-latest'
+  - '-c'
+  - |
+      docker run -e "CI=true" -v "$$(pwd):/project" node:14 /bin/sh -c "npm install -g snyk"
 
 - id: 'snyk scan'
   name: 'gcr.io/cloud-builders/docker'
