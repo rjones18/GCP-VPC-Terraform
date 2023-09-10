@@ -23,6 +23,12 @@ steps:
       echo "$BRANCH_NAME"
       echo "***********************"
 
+- id: 'pull snyk image'
+  name: 'gcr.io/cloud-builders/docker'
+  args:
+  - 'pull'
+  - 'snyk/snyk:latest'
+
 - id: 'snyk scan'
   name: 'gcr.io/cloud-builders/docker'
   entrypoint: 'sh'
