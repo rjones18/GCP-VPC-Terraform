@@ -27,7 +27,7 @@ steps:
   name: 'gcr.io/cloud-builders/docker'
   args:
   - 'pull'
-  - 'snyk/snyk:latest'
+  - 'snyk/snyk:alpine'
 
 - id: 'snyk scan'
   name: 'gcr.io/cloud-builders/docker'
