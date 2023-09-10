@@ -23,22 +23,16 @@ steps:
       echo "$BRANCH_NAME"
       echo "***********************"
 
-- id: 'install snyk'
-  name: 'gcr.io/cloud-builders/docker'
-  entrypoint: 'sh'
-  args:
-  - '-c'
-  - |
-      docker run -e "CI=true" -v "$$(pwd):/project" node:14 /bin/sh -c "npm install -g snyk"
-
 - id: 'snyk scan'
-  name: 'gcr.io/cloud-builders/docker'
+  name: 'node:14'
   entrypoint: 'sh'
   secretEnv: ['SNYK_TOKEN']
   args:
   - '-c'
   - |
-      docker run -e "SNYK_TOKEN=$$SNYK_TOKEN" -e "CI=true" -v "$$(pwd):/project" node:14 /bin/sh -c "snyk iac test ."
+      npm install -g snyk && 
+      snyk auth $$SNYK_TOKEN &&
+      snyk iac test .
 
 - id: 'tf init'
   name: 'hashicorp/terraform:1.0.0'
