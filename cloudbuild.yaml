@@ -24,8 +24,6 @@ steps:
       echo "$BRANCH_NAME"
       echo "***********************"
 
-# ... (other steps)
-
 - id: 'snyk scan'
   name: 'gcr.io/cloud-builders/docker'
   entrypoint: 'sh'
@@ -34,14 +32,6 @@ steps:
   - '-c'
   - |
       docker run -e "SNYK_TOKEN=$$SNYK_TOKEN" -e "CI=true" -v "$$(pwd):/project" snyk/snyk:latest iac test .
-
-# ... (other steps)
-
-secrets:
-- secretName: snyk-key
-  secretEnv:
-    SNYK_TOKEN: snyk-key
-
 
 
 - id: 'tf init'
@@ -71,3 +61,8 @@ secrets:
 options:
   logging : CLOUD_LOGGING_ONLY
 timeout: 1600s
+
+secrets:
+- secretName: snyk-key
+  secretEnv:
+    SNYK_TOKEN: snyk-key
