@@ -1,3 +1,4 @@
+---
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 steps:
 - id: 'branch name'
   name: 'alpine'
-  entrypoint: 'sh'  
-  args: 
+  entrypoint: 'sh'
+  args:
   - '-c'
-  - | 
+  - |
       echo "***********************"
       echo "$BRANCH_NAME"
       echo "***********************"
@@ -33,36 +33,33 @@ steps:
   - |
       docker run -e "SNYK_TOKEN=$$SNYK_TOKEN" -e "CI=true" -v "$$(pwd):/project" snyk/snyk:latest iac test .
 
-
 - id: 'tf init'
   name: 'hashicorp/terraform:1.0.0'
   entrypoint: 'sh'
-  args: 
+  args:
   - '-c'
   - terraform init
 
-# [START tf-plan]
 - id: 'tf plan'
   name: 'hashicorp/terraform:1.0.0'
   entrypoint: 'sh'
-  args: 
+  args:
   - '-c'
   - terraform plan
 
-
-# [START tf-apply]
 - id: 'tf apply'
   name: 'hashicorp/terraform:1.0.0'
   entrypoint: 'sh'
-  args: 
+  args:
   - '-c'
   - terraform apply -auto-approve
-  
+
 options:
-  logging : CLOUD_LOGGING_ONLY
-timeout: 1600s
+  logging: CLOUD_LOGGING_ONLY
+  timeout: 1600s
 
 secrets:
 - secretName: snyk-key
   secretEnv:
     SNYK_TOKEN: snyk-key
+
