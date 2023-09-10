@@ -23,6 +23,27 @@ steps:
       echo "***********************"
       echo "$BRANCH_NAME"
       echo "***********************"
+
+# ... (other steps)
+
+- id: 'snyk scan'
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'sh'
+  secretEnv: ['SNYK_TOKEN']
+  args:
+  - '-c'
+  - |
+      docker run -e "SNYK_TOKEN=$$SNYK_TOKEN" -e "CI=true" -v "$$(pwd):/project" snyk/snyk:latest iac test .
+
+# ... (other steps)
+
+secrets:
+- secretName: snyk-key
+  secretEnv:
+    SNYK_TOKEN: snyk-key
+
+
+
 - id: 'tf init'
   name: 'hashicorp/terraform:1.0.0'
   entrypoint: 'sh'
