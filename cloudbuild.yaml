@@ -36,7 +36,7 @@ steps:
   args:
   - '-c'
   - |
-      docker run -e "SNYK_TOKEN=$$SNYK_TOKEN" -e "CI=true" -v "$$(pwd):/project" snyk/snyk:latest iac test .
+      docker run -e "SNYK_TOKEN=$$SNYK_TOKEN" -e "CI=true" -v "$$(pwd):/project" snyk/snyk:alpine iac test .
 
 - id: 'tf init'
   name: 'hashicorp/terraform:1.0.0'
