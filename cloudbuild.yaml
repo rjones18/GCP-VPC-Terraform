@@ -23,14 +23,14 @@ steps:
       echo "$BRANCH_NAME"
       echo "***********************"
 
-# - id: 'snyk scan'
-#   name: 'gcr.io/cloud-builders/docker'
-#   entrypoint: 'sh'
-#   secretEnv: ['SNYK_TOKEN']
-#   args:
-#   - '-c'
-#   - |
-#       docker run -e "SNYK_TOKEN=$$SNYK_TOKEN" -e "CI=true" -v "$$(pwd):/project" snyk/snyk:latest iac test .
+- id: 'snyk scan'
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'sh'
+  secretEnv: ['SNYK_TOKEN']
+  args:
+  - '-c'
+  - |
+      docker run -e "SNYK_TOKEN=$$SNYK_TOKEN" -e "CI=true" -v "$$(pwd):/project" snyk/snyk:latest iac test .
 
 - id: 'tf init'
   name: 'hashicorp/terraform:1.0.0'
@@ -57,9 +57,9 @@ options:
   logging: CLOUD_LOGGING_ONLY
 timeout: 1600s
 
-# secrets:
-# - secretName: snyk-key
-#   secretEnv:
-#     SNYK_TOKEN: snyk-key
+availableSecrets:
+  secretManager:
+  - versionName: projects/alert-flames-286515/secrets/snyk-key/versions/1
+    env: 'SNYK_TOKEN'
 
 
